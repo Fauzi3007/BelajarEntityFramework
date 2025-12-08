@@ -1,0 +1,15 @@
+﻿namespace BelajarEntityFramework.ViewModels
+{
+    public class DeleteProductViewModel
+    {
+        public int ProductId { get; set; }
+
+        public string Name { get; set; }
+
+        public string Brand { get; set; }
+        public decimal Price { get; set; }
+        public string? MainImageFileName { get; set; }
+
+        public string Description { get; set; }
+    }
+}
