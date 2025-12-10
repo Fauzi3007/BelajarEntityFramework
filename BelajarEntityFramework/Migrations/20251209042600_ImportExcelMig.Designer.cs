@@ -4,6 +4,7 @@ using BelajarEntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BelajarEntityFramework.Migrations
 {
     [DbContext(typeof(EFDbContext))]
-    partial class EFDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209042600_ImportExcelMig")]
+    partial class ImportExcelMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,57 +229,6 @@ namespace BelajarEntityFramework.Migrations
                             CategoryId = 3,
                             Description = "Furniture and home decor",
                             Name = "Home Goods"
-                        });
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.Customer", b =>
-                {
-                    b.Property<int>("CustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("CustomerId");
-
-                    b.ToTable("Customers");
-
-                    b.HasData(
-                        new
-                        {
-                            CustomerId = 1,
-                            Address = "123 Main St, City A",
-                            Email = "alice@example.com",
-                            Name = "Alice Johnson",
-                            Phone = "555-1234"
-                        },
-                        new
-                        {
-                            CustomerId = 2,
-                            Address = "456 Elm St, City B",
-                            Email = "bob@example.com",
-                            Name = "Bob Smith",
-                            Phone = "555-5678"
                         });
                 });
 
@@ -611,179 +563,6 @@ namespace BelajarEntityFramework.Migrations
                     b.ToTable("IdentityProofs");
                 });
 
-            modelBuilder.Entity("BelajarEntityFramework.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("GrandTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalTax")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("Orders");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderId = 1,
-                            CustomerId = 1,
-                            GrandTotal = 1650.00m,
-                            OrderDate = new DateTime(2025, 12, 4, 0, 0, 0, 0, DateTimeKind.Local),
-                            OrderNumber = "ORD1001",
-                            SubTotal = 1500.00m,
-                            TotalTax = 150.00m
-                        },
-                        new
-                        {
-                            OrderId = 2,
-                            CustomerId = 2,
-                            GrandTotal = 880.00m,
-                            OrderDate = new DateTime(2025, 12, 7, 0, 0, 0, 0, DateTimeKind.Local),
-                            OrderNumber = "ORD1002",
-                            SubTotal = 800.00m,
-                            TotalTax = 80.00m
-                        });
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.OrderItem", b =>
-                {
-                    b.Property<int>("OrderItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TaxPercent")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderItemId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderItems");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderItemId = 1,
-                            OrderId = 1,
-                            ProductId = 1,
-                            Quantity = 1,
-                            TaxPercent = 10.00m,
-                            UnitPrice = 1200.00m
-                        },
-                        new
-                        {
-                            OrderItemId = 2,
-                            OrderId = 1,
-                            ProductId = 3,
-                            Quantity = 2,
-                            TaxPercent = 10.00m,
-                            UnitPrice = 150.00m
-                        },
-                        new
-                        {
-                            OrderItemId = 3,
-                            OrderId = 2,
-                            ProductId = 2,
-                            Quantity = 1,
-                            TaxPercent = 10.00m,
-                            UnitPrice = 800.00m
-                        });
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PaymentAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-
-                    b.HasData(
-                        new
-                        {
-                            PaymentId = 1,
-                            OrderId = 1,
-                            PaymentAmount = 1650.00m,
-                            PaymentDate = new DateTime(2025, 12, 5, 0, 0, 0, 0, DateTimeKind.Local),
-                            PaymentMethod = "Credit Card",
-                            PaymentStatus = "Paid"
-                        },
-                        new
-                        {
-                            PaymentId = 2,
-                            OrderId = 2,
-                            PaymentAmount = 880.00m,
-                            PaymentDate = new DateTime(2025, 12, 8, 0, 0, 0, 0, DateTimeKind.Local),
-                            PaymentMethod = "PayPal",
-                            PaymentStatus = "Paid"
-                        });
-                });
-
             modelBuilder.Entity("BelajarEntityFramework.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -1077,55 +856,6 @@ namespace BelajarEntityFramework.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("BelajarEntityFramework.Models.ProductPdf", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("ProductsPdf");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = 1,
-                            Description = "High performance laptop",
-                            Name = "Laptop",
-                            Price = 1200.00m
-                        },
-                        new
-                        {
-                            ProductId = 2,
-                            Description = "Latest model smartphone",
-                            Name = "Smartphone",
-                            Price = 800.00m
-                        },
-                        new
-                        {
-                            ProductId = 3,
-                            Description = "Noise-cancelling headphones",
-                            Name = "Headphones",
-                            Price = 150.00m
-                        });
-                });
-
             modelBuilder.Entity("BelajarEntityFramework.Models.ProofType", b =>
                 {
                     b.Property<int>("Id")
@@ -1358,47 +1088,6 @@ namespace BelajarEntityFramework.Migrations
                     b.Navigation("VerificationStatus");
                 });
 
-            modelBuilder.Entity("BelajarEntityFramework.Models.Order", b =>
-                {
-                    b.HasOne("BelajarEntityFramework.Models.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.OrderItem", b =>
-                {
-                    b.HasOne("BelajarEntityFramework.Models.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BelajarEntityFramework.Models.ProductPdf", "Product")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.Payment", b =>
-                {
-                    b.HasOne("BelajarEntityFramework.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("BelajarEntityFramework.Models.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("BelajarEntityFramework.Models.Product", b =>
                 {
                     b.HasOne("BelajarEntityFramework.Models.Supplier", null)
@@ -1441,11 +1130,6 @@ namespace BelajarEntityFramework.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("BelajarEntityFramework.Models.Customer", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
             modelBuilder.Entity("BelajarEntityFramework.Models.Department", b =>
                 {
                     b.Navigation("Employees");
@@ -1466,22 +1150,9 @@ namespace BelajarEntityFramework.Migrations
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("BelajarEntityFramework.Models.Order", b =>
-                {
-                    b.Navigation("OrderItems");
-
-                    b.Navigation("Payment")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BelajarEntityFramework.Models.Product", b =>
                 {
                     b.Navigation("RelatedImages");
-                });
-
-            modelBuilder.Entity("BelajarEntityFramework.Models.ProductPdf", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("BelajarEntityFramework.Models.Supplier", b =>

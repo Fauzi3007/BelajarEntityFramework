@@ -1,0 +1,115 @@
+﻿@model IEnumerable<BelajarEntityFramework.Models.UserProfile>
+
+@{
+    ViewData["Title"] = "User Profiles";
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <!-- Card header with a secondary background -->
+        <div class="card-header bg-secondary text-white">
+            <h2 class="mb-0">User Profiles</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Profile Picture</th>
+                            <th>Identity Proofs</th>
+                            <th>Current Status/Action</th>
+                            <th>Created On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var profile in Model)
+                        {
+                            <tr>
+                                <!-- Full Name -->
+                                <td class="fw-bold align-middle">@profile.FullName</td>
+
+                                <!-- Profile Picture -->
+                                <td class="align-middle text-center">
+                                    <img src="~/uploads/profile_pictures/@profile.ProfilePictureFileName"
+                                         alt="Profile Picture"
+                                         class="img-thumbnail"
+                                         style="max-width:100px; max-height:100px;" />
+                                </td>
+
+                                <!-- Identity Proofs (Document Details) -->
+                                <td class="align-middle">
+                                    @if (profile.IdentityProofs != null && profile.IdentityProofs.Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var proof in profile.IdentityProofs)
+                                            {
+                                                <li class="mb-2">
+                                                    <div>
+                                                        <strong class="text-primary">@proof.ProofType.Name</strong> &ndash;
+                                                        <a href="~/uploads/identity_proofs/@proof.FileName" target="_blank" class="text-decoration-none">
+                                                            View Document
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <small class="text-muted">
+                                                            Type: @proof.FileType, Size: @proof.FileSize bytes
+                                                        </small>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </td>
+
+                                <!-- Current Status/Action -->
+                                <td class="align-middle">
+                                    @if (profile.IdentityProofs != null && profile.IdentityProofs.Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var proof in profile.IdentityProofs)
+                                            {
+                                                <li class="mb-2">
+                                                    <div class="d-flex align-items-center" style="min-height:32px;">
+                                                        @{
+                                                            // Determine badge class based on the verification status.
+                                                            string badgeClass = "";
+                                                            if (proof.VerificationStatus.Name.Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                badgeClass = "badge bg-info text-dark";
+                                                            }
+                                                            else if (proof.VerificationStatus.Name.Equals("Verified", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                badgeClass = "badge bg-success";
+                                                            }
+                                                            else if (proof.VerificationStatus.Name.Equals("Rejected", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                badgeClass = "badge bg-danger";
+                                                            }
+                                                        }
+                                                        <span class="@badgeClass" style="display:inline-block; height:32px; line-height:32px; padding: 0 10px;">
+                                                            @proof.VerificationStatus.Name
+                                                        </span>
+                                                        @if (proof.VerificationStatus.Name.Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            <a asp-action="Verify" asp-controller="UserProfile" asp-route-id="@proof.Id" class="d-flex align-items-center btn btn-sm btn-primary ms-2" style="height:32px; line-height:32px;">
+                                                                Verify
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </td>
+
+                                <!-- Created On -->
+                                <td class="align-middle text-muted">@profile.CreatedOn.ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

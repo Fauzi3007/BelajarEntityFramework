@@ -1,0 +1,182 @@
+﻿@model BelajarEntityFramework.ViewModels.EmployeeListViewModel
+
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<div class="container mt-5">
+    <!-- Page Header -->
+    <div class="row">
+        <div class="col">
+            <h2 class="text-center mb-4">Employee List</h2>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Filter Options
+        </div>
+        <div class="card-body">
+            <form method="get" asp-controller="EmployeeExcel" asp-action="Index">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="departmentId" class="form-label">Department:</label>
+                        <select id="departmentId" name="departmentId" class="form-select">
+                            <option value="">All</option>
+                            @foreach (var dept in Model.DepartmentsExcel)
+                            {
+                                <option value="@dept.DepartmentId" selected="@(dept.DepartmentId == Model.SelectedDepartmentId)">
+                                    @dept.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="employeeTypeId" class="form-label">Employee Type:</label>
+                        <select id="employeeTypeId" name="employeeTypeId" class="form-select">
+                            <option value="">All</option>
+                            @foreach (var type in Model.EmployeeTypes)
+                            {
+                                <option value="@type.EmployeeTypeId" selected="@(type.EmployeeTypeId == Model.SelectedEmployeeTypeId)">
+                                    @type.TypeName
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="isActive" class="form-label">Status:</label>
+                        <select id="isActive" name="isActive" class="form-select">
+                            <option value="">All</option>
+                            <option value="true" selected="@(Model.SelectedStatus == true)">Active</option>
+                            <option value="false" selected="@(Model.SelectedStatus == false)">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Employee Data Table with Export Button in Header -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>Employee Data</span>
+                <!-- Export to Excel Button placed in header -->
+                <form method="get" asp-controller="EmployeeExcel" asp-action="ExportToExcel" class="mb-0">
+                    <input type="hidden" name="departmentId" value="@(Model.SelectedDepartmentId)" />
+                    <input type="hidden" name="employeeTypeId" value="@(Model.SelectedEmployeeTypeId)" />
+                    <input type="hidden" name="isActive" value="@(Model.SelectedStatus?.ToString().ToLower())" />
+
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-excel"></i> Export to Excel
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <!-- Table wrapped with table-responsive to include scroll bar if needed -->
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Join Date</th>
+                            <th>Salary</th>
+                            <th>Is Active</th>
+                            <th>Employee Type</th>
+                            <th>Total Attendance</th>
+                            <th>Present Days</th>
+                            <th>Absent Days</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model.Employees)
+                        {
+                            <tr>
+                                <td>@employee.EmployeeId</td>
+                                <td>@employee.FullName</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.DepartmentName</td>
+                                <td>@employee.JoinDate.ToString("yyyy-MM-dd")</td>
+                                <td>@employee.Salary.ToString("C")</td>
+                                <td>@(employee.IsActive ? "Yes" : "No")</td>
+                                <td>@employee.EmployeeTypeName</td>
+                                <td>@employee.TotalAttendance</td>
+                                <td>@employee.PresentDays</td>
+                                <td>@employee.AbsentDays</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    @if (Model.TotalPages >= 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- First Page Button -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="1"
+                       asp-route-departmentId="@Model.SelectedDepartmentId"
+                       asp-route-employeeTypeId="@Model.SelectedEmployeeTypeId"
+                       asp-route-isActive="@Model.SelectedStatus">
+                        First
+                    </a>
+                </li>
+                <!-- Previous Page Button -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.CurrentPage - 1)"
+                       asp-route-departmentId="@Model.SelectedDepartmentId"
+                       asp-route-employeeTypeId="@Model.SelectedEmployeeTypeId"
+                       asp-route-isActive="@Model.SelectedStatus">
+                        Previous
+                    </a>
+                </li>
+                <!-- Current Page Indicator -->
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page @Model.CurrentPage of @Model.TotalPages
+                    </span>
+                </li>
+                <!-- Next Page Button -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.CurrentPage + 1)"
+                       asp-route-departmentId="@Model.SelectedDepartmentId"
+                       asp-route-employeeTypeId="@Model.SelectedEmployeeTypeId"
+                       asp-route-isActive="@Model.SelectedStatus">
+                        Next
+                    </a>
+                </li>
+                <!-- Last Page Button -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.TotalPages)"
+                       asp-route-departmentId="@Model.SelectedDepartmentId"
+                       asp-route-employeeTypeId="@Model.SelectedEmployeeTypeId"
+                       asp-route-isActive="@Model.SelectedStatus">
+                        Last
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

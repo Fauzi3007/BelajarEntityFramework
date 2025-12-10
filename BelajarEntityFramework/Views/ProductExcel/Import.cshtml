@@ -1,0 +1,67 @@
+﻿@model BelajarEntityFramework.ViewModels.ProductImportViewModel
+
+@{
+    ViewData["Title"] = "Import Products";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Import Products</h2>
+
+    <div class="mb-3">
+        <a asp-action="DownloadTemplate" class="btn btn-warning">
+            <i class="fas fa-download"></i> Download Excel Template
+        </a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+    <form asp-action="Import" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="fileUpload">Select Excel File (.xlsx)</label>
+            <input type="file" class="form-control" name="FileUpload" id="fileUpload" accept=".xlsx" required />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">
+            <i class="fas fa-upload"></i> Upload and Import
+        </button>
+    </form>
+
+    @if (Model.ImportResults.Any())
+    {
+        <h4 class="mt-5">Import Summary</h4>
+        <table class="table table-bordered mt-3">
+            <thead class="thead-light">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.ImportResults)
+                {
+                    <tr>
+                        <td>@result.ProductName</td>
+                        <td>
+                            @if (result.Success)
+                            {
+                                <span class="text-success">Processed</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Failed</span>
+                            }
+                        </td>
+                        <td>@result.Message</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Back to Product List</a>
+    </div>
+</div>

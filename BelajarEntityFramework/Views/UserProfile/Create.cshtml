@@ -1,0 +1,261 @@
+﻿@model BelajarEntityFramework.ViewModel.UserProfileUploadViewModel
+
+@{
+    ViewData["Title"] = "Create User Profile";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Left Column: Profile Creation Form -->
+        <div class="col-lg-7">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Create Your Profile</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Profile Form -->
+                    <form id="userProfileForm" asp-controller="UserProfile" asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <!-- Full Name Field -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" placeholder="John Doe" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Profile Picture Field -->
+                        <div class="mb-3">
+                            <label asp-for="ProfilePicture" class="form-label">Profile Picture</label>
+                            @* <input asp-for="ProfilePicture" type="file" accept="image/jpg, image/jpeg, image/png, image/gif" class="form-control custom-file-input" /> *@
+                            <input asp-for="ProfilePicture" type="file" accept=".jpg,.jpeg,.png,.gif" class="form-control custom-file-input" />
+                    @*         <input asp-for="ProfilePicture" type="file" class="form-control custom-file-input" /> *@
+                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                        </div>
+
+                        <!-- Identity Proofs Section -->
+                        <h4 class="mt-4">Identity Proofs</h4>
+                        <hr />
+
+                        <!-- Container for Identity Proof Entries -->
+                        <div id="identityProofsContainer">
+                            @for (int i = 0; i < Model.IdentityProofs.Count; i++)
+                            {
+                                <div class="identity-proof-entry border rounded p-3 mb-3">
+                                    <div class="mb-2">
+                                        <h5 class="mb-0">Proof @(i + 1)</h5>
+                                    </div>
+                                    <!-- Proof Type Dropdown -->
+                                    <div class="mb-3">
+                                        <label asp-for="IdentityProofs[i].SelectedProofTypeId" class="form-label">Proof Type</label>
+                                        <select asp-for="IdentityProofs[i].SelectedProofTypeId" class="form-select" asp-items="(SelectList)ViewBag.ProofTypes">
+                                            <option value="">-- Select Proof Type --</option>
+                                        </select>
+                                        <span asp-validation-for="IdentityProofs[i].SelectedProofTypeId" class="text-danger"></span>
+                                    </div>
+                                    <!-- Proof File Upload -->
+                                    <div class="mb-3">
+                                        <label asp-for="IdentityProofs[i].File" class="form-label">Proof File (PDF)</label>
+                                        <input asp-for="IdentityProofs[i].File" type="file" accept=".pdf" class="form-control custom-file-input" />
+                                       @*  <input asp-for="IdentityProofs[i].File" type="file" accept="application/pdf" class="form-control custom-file-input" /> *@
+@*                                         <input asp-for="IdentityProofs[i].File" type="file" class="form-control custom-file-input" /> *@
+                                        <span asp-validation-for="IdentityProofs[i].File" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Button to Add Additional Identity Proof -->
+                        <div class="mb-3">
+                            <button type="button" id="addProofBtn" class="btn btn-secondary">
+                                <i class="bi bi-plus-circle"></i> Add Identity Proof
+                            </button>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Submit Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Profile Creation Guidelines -->
+        <div class="col-lg-5 d-none d-lg-block">
+            <div class="card shadow border-0">
+                <div class="card-body" style="text-align: justify;">
+                    <h4 class="card-title">Profile Creation Guidelines</h4>
+                    <ul>
+                        <li>
+                            <strong>Full Name:</strong> Enter your complete legal name exactly as it appears on your identification.
+                        </li>
+                        <li>
+                            <strong>Profile Picture:</strong> Upload a clear and recent photograph in JPG, PNG, or GIF format (max 2MB).
+                        </li>
+                        <li>
+                            <strong>Identity Proofs:</strong> Upload each identity document in PDF format (max 5MB per file). Ensure that each document type is unique—duplicate selections are not allowed.
+                        </li>
+                    </ul>
+                    <p class="text-muted">For any assistance, please contact our support team.</p>
+                    <a href="mailto:support@example.com" class="btn btn-outline-primary">
+                        <i class="bi bi-envelope-fill"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Template for New Identity Proof Entry -->
+<script id="identityProofTemplate" type="text/template">
+    <div class="identity-proof-entry border rounded p-3 mb-3">
+        <div class="mb-2">
+            <h5 class="mb-0">Proof __INDEX__</h5>
+        </div>
+        <div class="mb-3">
+            <label for="IdentityProofs___INDEX___SelectedProofTypeId" class="form-label">Proof Type</label>
+            <select class="form-select" id="IdentityProofs___INDEX___SelectedProofTypeId" name="IdentityProofs[__INDEX__].SelectedProofTypeId">
+                <option value="">-- Select Proof Type --</option>
+                    @foreach (var item in (SelectList)ViewBag.ProofTypes)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+            </select>
+            <span class="text-danger field-validation-valid" data-valmsg-for="IdentityProofs[__INDEX__].SelectedProofTypeId" data-valmsg-replace="true"></span>
+        </div>
+        <div class="mb-3">
+            <label for="IdentityProofs___INDEX___File" class="form-label">Proof File (PDF)</label>
+            <input class="form-control custom-file-input" accept=".pdf" id="IdentityProofs___INDEX___File" name="IdentityProofs[__INDEX__].File" type="file" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="IdentityProofs[__INDEX__].File" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+</script>
+
+<!-- Modal Popup for Error Messages -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- The error message text is now styled with text-danger -->
+            <div class="modal-body text-danger" id="modalErrorMessage">
+                <!-- Error message will be injected here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Allowed file types and size limits
+            var allowedProfileExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+            var maxProfileSize = 2 * 1024 * 1024; // 2 MB
+
+            var allowedProofExtension = '.pdf';
+            var maxProofSize = 5 * 1024 * 1024;  // 5 MB
+
+            // Utility: get file extension from filename
+            function getFileExtension(filename) {
+                return filename.substring(filename.lastIndexOf('.')).toLowerCase();
+            }
+
+            // Validate file inputs when changed
+            $(document).on('change', 'input[type="file"]', function () {
+                var $this = $(this);
+                var file = this.files[0];
+                if (file) {
+                    var ext = getFileExtension(file.name);
+                    // Check if this is the Profile Picture
+                    if ($this.attr('name') === 'ProfilePicture') {
+                        if ($.inArray(ext, allowedProfileExtensions) === -1) {
+                            showErrorModal("Invalid file type for Profile Picture. Allowed types: JPG, JPEG, PNG, GIF.");
+                            $this.val(''); // Reset the file input
+                        } else if (file.size > maxProfileSize) {
+                            showErrorModal("Profile Picture size exceeds the 2 MB limit.");
+                            $this.val('');
+                        }
+                    } else {
+                        // Otherwise, it's an Identity Proof file (PDF only)
+                        if (ext !== allowedProofExtension) {
+                            showErrorModal("Invalid file type for Identity Proof. Only PDF files are allowed.");
+                            $this.val('');
+                        } else if (file.size > maxProofSize) {
+                            showErrorModal("Identity Proof file size exceeds the 5 MB limit.");
+                            $this.val('');
+                        }
+                    }
+                }
+            });
+
+            // Check for duplicate identity proof selections on change using event delegation
+            $(document).on('change', 'select[name*="SelectedProofTypeId"]', function () {
+                var $currentSelect = $(this);
+                var currentVal = $currentSelect.val();
+                if (currentVal) {
+                    var duplicateFound = false;
+                    $('select[name*="SelectedProofTypeId"]').not($currentSelect).each(function () {
+                        if ($(this).val() === currentVal) {
+                            duplicateFound = true;
+                            return false; // break loop
+                        }
+                    });
+                    if (duplicateFound) {
+                        showErrorModal("Duplicate identity proof types are not allowed. Please select a unique type.");
+                        // Reset the current select to its default empty value
+                        $currentSelect.val('');
+                    }
+                }
+            });
+
+            // Also check duplicates on form submission
+            $('#userProfileForm').on('submit', function (e) {
+                var selectedValues = {};
+                var duplicateFound = false;
+                $('select[name*="SelectedProofTypeId"]').each(function () {
+                    var val = $(this).val();
+                    if (val) {
+                        if (selectedValues[val]) {
+                            duplicateFound = true;
+                            return false;
+                        } else {
+                            selectedValues[val] = true;
+                        }
+                    }
+                });
+                if (duplicateFound) {
+                    showErrorModal("Duplicate identity proof types are not allowed. Please select unique types for each.");
+                    e.preventDefault();
+                }
+            });
+
+            // Add new identity proof entry dynamically using jQuery
+            $('#addProofBtn').on('click', function () {
+                var $container = $('#identityProofsContainer');
+                var index = $container.find('.identity-proof-entry').length;
+                var template = $('#identityProofTemplate').html();
+                var newEntryHtml = template.replace(/__INDEX__/g, index);
+                $container.append(newEntryHtml);
+            });
+
+            // Update custom file input labels on change
+            $(document).on('change', '.custom-file-input', function () {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).siblings('.custom-file-label').html(fileName);
+            });
+
+            // Function to show the error modal with a given message
+            function showErrorModal(message) {
+                $('#modalErrorMessage').text(message);
+                $('#errorModal').modal('show');
+            }
+        });
+    </script>
+}

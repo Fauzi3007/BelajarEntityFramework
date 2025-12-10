@@ -1,0 +1,98 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Order Details - @Model.OrderNumber</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <!-- Order Information -->
+                <div class="col-md-6">
+                    <h5 class="mb-2 text-muted">Order Information</h5>
+                    <p><strong>Order Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd")</p>
+                    <p><strong>SubTotal:</strong> @Model.SubTotal.ToString("C")</p>
+                    <p><strong>Total Tax:</strong> @Model.TotalTax.ToString("C")</p>
+                    <p><strong>Grand Total:</strong> @Model.GrandTotal.ToString("C")</p>
+                </div>
+                <!-- Customer Information -->
+                <div class="col-md-6">
+                    <h5 class="mb-2 text-muted">Customer Details</h5>
+                    <p><strong>Name:</strong> @Model.Customer?.Name</p>
+                    <p><strong>Email:</strong> @Model.Customer?.Email</p>
+                    <p><strong>Phone:</strong> @Model.Customer?.Phone</p>
+                    <p><strong>Address:</strong> @Model.Customer?.Address</p>
+                </div>
+            </div>
+            <hr />
+            <!-- Order Items Table -->
+            <h5 class="mb-2">Order Items</h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Product</th>
+                            <th>Description</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-center">Tax %</th>
+                            <th class="text-right">Tax Amount</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            var subTotal = item.UnitPrice * item.Quantity;
+                            var taxAmount = subTotal * (item.TaxPercent / 100);
+                            var total = subTotal + taxAmount;
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Product.Description</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-right">@item.UnitPrice.ToString("C")</td>
+                                <td class="text-center">@($"{item.TaxPercent:F2}%")</td>
+                                <td class="text-right">@taxAmount.ToString("C")</td>
+                                <td class="text-right">@total.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+            <!-- Payment Details -->
+            <h5 class="mb-2">Payment Details</h5>
+            @if (Model.Payment != null)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Payment Method:</strong> @Model.Payment.PaymentMethod</p>
+                        <p><strong>Payment Date:</strong> @Model.Payment.PaymentDate?.ToString("yyyy-MM-dd")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Amount Paid:</strong> @Model.Payment.PaymentAmount.ToString("C")</p>
+                        <p><strong>Payment Status:</strong> @Model.Payment.PaymentStatus</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    Payment not recorded.
+                </div>
+            }
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                <a asp-action="GeneratePdf" asp-route-id="@Model.OrderId" class="btn btn-success mr-2">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

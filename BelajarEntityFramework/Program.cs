@@ -1,6 +1,7 @@
 using BelajarEntityFramework.GenericRepository;
 using BelajarEntityFramework.Models;
 using BelajarEntityFramework.Repository;
+using BelajarEntityFramework.Services;
 using BelajarEntityFramework.UOW;
 using CRUDinCoreMVC.UOW;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace BelajarEntityFramework
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();

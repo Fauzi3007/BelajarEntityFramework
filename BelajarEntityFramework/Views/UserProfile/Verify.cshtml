@@ -1,0 +1,89 @@
+﻿@model BelajarEntityFramework.ViewModels.IdentityProofVerificationViewModel
+
+@{
+    ViewData["Title"] = "Verify Identity Proof";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Verify Identity Proof</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Verify" asp-controller="UserProfile" method="post">
+                        <!-- Hidden field for ID -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Proof Type -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">Proof Type:</div>
+                            <div class="col-sm-8">
+                                <span>@Model.ProofTypeName</span>
+                            </div>
+                        </div>
+
+                        <!-- File Name with "View PDF" Option -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">File Name:</div>
+                            <div class="col-sm-8">
+                                <span>@Model.FileName</span>
+                                <a href="~/uploads/identity_proofs/@Model.FileName" target="_blank" class="ms-2 text-decoration-none">View PDF</a>
+                            </div>
+                        </div>
+
+                        <!-- File Type -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">File Type:</div>
+                            <div class="col-sm-8">
+                                <span>@Model.FileType</span>
+                            </div>
+                        </div>
+
+                        <!-- File Size -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">File Size (bytes):</div>
+                            <div class="col-sm-8">
+                                <span>@Model.FileSize</span>
+                            </div>
+                        </div>
+
+                        <!-- New Verification Status Dropdown -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">New Verification Status:</div>
+                            <div class="col-sm-8">
+                                <select asp-for="NewVerificationStatusId" class="form-select" asp-items="(SelectList)ViewBag.VerificationStatuses">
+                                    <option value="">-- Select Verification Status --</option>
+                                </select>
+                                <span asp-validation-for="NewVerificationStatusId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Admin Comments -->
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold">Admin Comments:</div>
+                            <div class="col-sm-8">
+                                <textarea asp-for="AdminComments" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="AdminComments" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="IdentityProofs" asp-controller="Admin" class="btn btn-primary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Submit Verification
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted text-center">
+                    Please review the details carefully before submitting.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

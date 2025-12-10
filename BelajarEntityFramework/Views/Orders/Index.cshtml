@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Order List";
+}
+
+<!-- Bootstrap CSS for professional styling -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <h2>Order List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Order Date</th>
+                <th>Customer</th>
+                <th>Grand Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderNumber</td>
+                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                    <td>@order.Customer?.Name</td>
+                    <td>@order.GrandTotal.ToString("C")</td>
+                    <td>
+                        <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-info btn-sm">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
