@@ -347,7 +347,69 @@ namespace BelajarEntityFramework.Models
                     PaymentStatus = "Paid"
                 }
             );
+
+            // SEED CUSTOMERS (if not already seeded)
+            modelBuilder.Entity<CustomerChart>().HasData(
+                new CustomerChart { CustomerId = 1, Name = "Alice", Email = "alice@example.com" },
+                new CustomerChart { CustomerId = 2, Name = "Bob", Email = "bob@example.com" }
+            );
+            // SEED PRODUCTS (with Category property assumed to be added)
+            modelBuilder.Entity<ProductChart>().HasData(
+                new ProductChart { ProductId = 1, Name = "Laptop", Price = 1200m, StockQuantity = 10, Category = "Electronics" },
+                new ProductChart { ProductId = 2, Name = "Phone", Price = 800m, StockQuantity = 15, Category = "Electronics" },
+                new ProductChart { ProductId = 3, Name = "Headphones", Price = 100m, StockQuantity = 30, Category = "Accessories" }
+            );
+            // SEED 18 ORDERS with OrderNumber and various statuses/dates
+            modelBuilder.Entity<OrderChart>().HasData(
+                new OrderChart { OrderId = 1, OrderNumber = "ORD-0001", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-1), TotalAmount = 1300m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 2, OrderNumber = "ORD-0002", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-1), TotalAmount = 2200m, OrderStatus = OrderStatus.Pending },
+                new OrderChart { OrderId = 3, OrderNumber = "ORD-0003", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-3), TotalAmount = 500m, OrderStatus = OrderStatus.Cancelled },
+                new OrderChart { OrderId = 4, OrderNumber = "ORD-0004", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-3), TotalAmount = 1600m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 5, OrderNumber = "ORD-0005", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-3), TotalAmount = 900m, OrderStatus = OrderStatus.Pending },
+                new OrderChart { OrderId = 6, OrderNumber = "ORD-0006", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-4), TotalAmount = 1800m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 7, OrderNumber = "ORD-0007", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-5), TotalAmount = 1100m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 8, OrderNumber = "ORD-0008", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-5), TotalAmount = 2500m, OrderStatus = OrderStatus.Cancelled },
+                new OrderChart { OrderId = 9, OrderNumber = "ORD-0009", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-5), TotalAmount = 1700m, OrderStatus = OrderStatus.Pending },
+                new OrderChart { OrderId = 10, OrderNumber = "ORD-0010", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-5), TotalAmount = 1400m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 11, OrderNumber = "ORD-0011", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-25), TotalAmount = 2000m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 12, OrderNumber = "ORD-0012", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-25), TotalAmount = 2100m, OrderStatus = OrderStatus.Pending },
+                new OrderChart { OrderId = 13, OrderNumber = "ORD-0013", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-25), TotalAmount = 1300m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 14, OrderNumber = "ORD-0014", CustomerId = 2, OrderDate = DateTime.Today.AddDays(-35), TotalAmount = 1900m, OrderStatus = OrderStatus.Cancelled },
+                new OrderChart { OrderId = 15, OrderNumber = "ORD-0015", CustomerId = 1, OrderDate = DateTime.Today.AddDays(-35), TotalAmount = 1500m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 16, OrderNumber = "ORD-0016", CustomerId = 1, OrderDate = DateTime.Today, TotalAmount = 300m, OrderStatus = OrderStatus.Pending },
+                new OrderChart { OrderId = 17, OrderNumber = "ORD-0017", CustomerId = 2, OrderDate = DateTime.Today, TotalAmount = 800m, OrderStatus = OrderStatus.Completed },
+                new OrderChart { OrderId = 18, OrderNumber = "ORD-0018", CustomerId = 1, OrderDate = DateTime.Today, TotalAmount = 150m, OrderStatus = OrderStatus.Cancelled }
+            );
+            // SEED ORDER ITEMS
+            modelBuilder.Entity<OrderItemChart>().HasData(
+                new OrderItemChart { OrderItemId = 1, OrderId = 1, ProductId = 1, Quantity = 1, UnitPrice = 1200m },
+                new OrderItemChart { OrderItemId = 2, OrderId = 1, ProductId = 3, Quantity = 1, UnitPrice = 100m },
+                new OrderItemChart { OrderItemId = 3, OrderId = 2, ProductId = 1, Quantity = 1, UnitPrice = 1200m },
+                new OrderItemChart { OrderItemId = 4, OrderId = 2, ProductId = 2, Quantity = 1, UnitPrice = 1000m },
+                new OrderItemChart { OrderItemId = 5, OrderId = 3, ProductId = 3, Quantity = 5, UnitPrice = 100m },
+                new OrderItemChart { OrderItemId = 6, OrderId = 4, ProductId = 2, Quantity = 2, UnitPrice = 800m },
+                new OrderItemChart { OrderItemId = 7, OrderId = 5, ProductId = 3, Quantity = 3, UnitPrice = 300m },
+                new OrderItemChart { OrderItemId = 8, OrderId = 6, ProductId = 1, Quantity = 1, UnitPrice = 1200m },
+                new OrderItemChart { OrderItemId = 9, OrderId = 6, ProductId = 3, Quantity = 1, UnitPrice = 600m },
+                new OrderItemChart { OrderItemId = 10, OrderId = 7, ProductId = 2, Quantity = 1, UnitPrice = 1100m },
+                new OrderItemChart { OrderItemId = 11, OrderId = 8, ProductId = 1, Quantity = 1, UnitPrice = 2500m },
+                new OrderItemChart { OrderItemId = 12, OrderId = 9, ProductId = 3, Quantity = 2, UnitPrice = 850m },
+                new OrderItemChart { OrderItemId = 13, OrderId = 10, ProductId = 2, Quantity = 1, UnitPrice = 1400m },
+                new OrderItemChart { OrderItemId = 14, OrderId = 11, ProductId = 1, Quantity = 1, UnitPrice = 2000m },
+                new OrderItemChart { OrderItemId = 15, OrderId = 12, ProductId = 2, Quantity = 1, UnitPrice = 2100m },
+                new OrderItemChart { OrderItemId = 16, OrderId = 13, ProductId = 3, Quantity = 1, UnitPrice = 1300m },
+                new OrderItemChart { OrderItemId = 17, OrderId = 14, ProductId = 1, Quantity = 1, UnitPrice = 1900m },
+                new OrderItemChart { OrderItemId = 18, OrderId = 15, ProductId = 2, Quantity = 1, UnitPrice = 1500m },
+                new OrderItemChart { OrderItemId = 19, OrderId = 16, ProductId = 3, Quantity = 3, UnitPrice = 100m },
+                new OrderItemChart { OrderItemId = 20, OrderId = 17, ProductId = 2, Quantity = 1, UnitPrice = 800m },
+                new OrderItemChart { OrderItemId = 21, OrderId = 18, ProductId = 3, Quantity = 1, UnitPrice = 150m }
+            );
         }
+        public DbSet<CustomerChart> CustomersChart { get; set; }
+        public DbSet<OrderChart> OrdersChart { get; set; }
+        public DbSet<OrderItemChart> OrderItemsChart { get; set; }
+        public DbSet<ProductChart> ProductsChart { get; set; }
+
         // DbSets for each entity.
         public DbSet<ProductPdf> ProductsPdf { get; set; }
         public DbSet<Customer> Customers { get; set; }

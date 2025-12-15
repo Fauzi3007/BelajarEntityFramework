@@ -1,0 +1,354 @@
+﻿@model BelajarEntityFramework.Models.SalesReportViewModel
+
+@{
+    // Set the page title for the browser tab
+    ViewData["Title"] = "Sales Report";
+}
+
+<h1 class="mt-4 mb-4">Sales Report</h1>
+
+<!-- --------------------------------------------------------
+     Filter Section: Allows users to filter orders by Date Range,
+     Category, and Order Status.
+-------------------------------------------------------- -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-filter"></i> Filter Options
+        </h5>
+    </div>
+    <div class="card-body">
+        <!-- Form submits to the Index action (GET) -->
+        <form method="get" asp-action="Index">
+            <div class="row">
+                <!-- Date Range Filter -->
+                <div class="form-group col-md-4">
+                    <label for="dateRangeOption">Date Range</label>
+                    <select id="dateRangeOption" name="dateRangeOption" class="form-select">
+                        @foreach (var option in Model.Filter.DateRangeOptions)
+                        {
+                            // If the option matches the selected filter, mark it as selected.
+                            <option value="@option" selected="@(option == Model.Filter.DateRangeOption ? "selected" : null)">
+                                @option
+                            </option>
+                        }
+                    </select>
+                </div>
+                <!-- Category Filter -->
+                <div class="form-group col-md-4">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var cat in Model.Filter.Categories)
+                        {
+                            // Mark category as selected if it matches the current filter.
+                            <option value="@cat" selected="@(cat == Model.Filter.Category ? "selected" : null)">
+                                @cat
+                            </option>
+                        }
+                    </select>
+                </div>
+                <!-- Order Status Filter -->
+                <div class="form-group col-md-4">
+                    <label for="orderStatus">Order Status</label>
+                    <select id="orderStatus" name="orderStatus" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var status in Model.Filter.OrderStatuses)
+                        {
+                            // Mark order status as selected if it matches the current filter.
+                            <option value="@status" selected="@(status == Model.Filter.OrderStatus ? "selected" : null)">
+                                @status
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <!-- Submit button to apply filters -->
+            <div class="row mt-3">
+                <div class="col text-right">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- --------------------------------------------------------
+     Summary Section: Displays summary data and a day-wise
+     bar chart with a total sales line overlay.
+-------------------------------------------------------- -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-chart-line"></i> Summary
+        </h5>
+    </div>
+    <div class="card-body">
+        <!-- Summary Cards: Display totals for orders, statuses, and sales -->
+        <div class="row text-center">
+            <div class="col-md-2 mb-3">
+                <div class="bg-light p-3 rounded">
+                    <small>Total Orders</small>
+                    <h4 class="mb-0">@Model.TotalOrders</h4>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="bg-light p-3 rounded">
+                    <small>Total Pending</small>
+                    <h4 class="mb-0">@Model.TotalPending</h4>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="bg-light p-3 rounded">
+                    <small>Total Completed</small>
+                    <h4 class="mb-0">@Model.TotalCompleted</h4>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="bg-light p-3 rounded">
+                    <small>Total Cancelled</small>
+                    <h4 class="mb-0">@Model.TotalCanceled</h4>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="bg-light p-3 rounded">
+                    <small>Total Sales Amount</small>
+                    <h4 class="mb-0">$@Model.TotalSales</h4>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <!-- Canvas element where the Chart.js bar chart will be rendered -->
+        <div>
+            <canvas id="dayWiseChart" width="1000" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- --------------------------------------------------------
+     Order Details Section: Displays a paginated table of
+     order details and a button to export the report as a PDF.
+-------------------------------------------------------- -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-header" style="background-color:#f8f9fa;">
+        <strong>Order Details</strong>
+        <!-- Link to export the current view as a PDF -->
+        <a class="btn btn-success btn-sm float-right"
+           asp-action="ExportToPdf"
+           asp-route-dateRangeOption="@Model.Filter.DateRangeOption"
+           asp-route-category="@Model.Filter.Category"
+           asp-route-orderStatus="@Model.Filter.OrderStatus">
+            Export to PDF
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Responsive table for order details -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders)
+                    {
+                        <tr>
+                            <td>@order.OrderNumber</td>
+                            <td>@order.OrderDate.ToShortDateString()</td>
+                            <td>@order.OrderStatus</td>
+                            <td>$@order.TotalAmount</td>
+                            <td>
+                                <!-- Button to view order product details in a modal -->
+                                <button class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#productsModal"
+                                        onclick="loadOrderProducts(@order.OrderId)">
+                                    <i class="fas fa-eye"></i> View Products
+                                </button>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- --------------------------------------------------------
+             Pagination Controls: Allows navigation between pages
+             of orders.
+        -------------------------------------------------------- -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <!-- First page button -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="1"
+                       asp-route-dateRangeOption="@Model.Filter.DateRangeOption"
+                       asp-route-category="@Model.Filter.Category"
+                       asp-route-orderStatus="@Model.Filter.OrderStatus">
+                        First
+                    </a>
+                </li>
+                <!-- Previous page button -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)"
+                       asp-route-dateRangeOption="@Model.Filter.DateRangeOption"
+                       asp-route-category="@Model.Filter.Category"
+                       asp-route-orderStatus="@Model.Filter.OrderStatus">
+                        Previous
+                    </a>
+                </li>
+                <!-- Current page display -->
+                <li class="page-item active">
+                    <span class="page-link">@Model.CurrentPage</span>
+                </li>
+                <!-- Next page button -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)"
+                       asp-route-dateRangeOption="@Model.Filter.DateRangeOption"
+                       asp-route-category="@Model.Filter.Category"
+                       asp-route-orderStatus="@Model.Filter.OrderStatus">
+                        Next
+                    </a>
+                </li>
+                <!-- Last page button -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.TotalPages)"
+                       asp-route-dateRangeOption="@Model.Filter.DateRangeOption"
+                       asp-route-category="@Model.Filter.Category"
+                       asp-route-orderStatus="@Model.Filter.OrderStatus">
+                        Last
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- --------------------------------------------------------
+     Modal for Product Details: Displays the list of products
+     in an order, loaded via AJAX.
+-------------------------------------------------------- -->
+<div class="modal fade" id="productsModal" tabindex="-1" role="dialog" aria-labelledby="productsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order Products</h5>
+                <!-- Close button for the modal -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Modal body where AJAX-loaded product details will be inserted -->
+            <div class="modal-body" id="productsModalBody">
+                <!-- Content loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Include Chart.js from CDN for rendering the bar chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Retrieve the serialized chart data (JSON) passed from the controller.
+        // The Model.ChartDataJson property contains a JSON string representing an object
+        // with properties like 'labels' (the X-axis labels) and 'datasets' (the data series).
+        var chartData = @Html.Raw(Model.ChartDataJson);
+
+        // Get the drawing context of the canvas where the chart will be rendered.
+        // 'document.getElementById' selects the HTML canvas element with the id "dayWiseChart".
+        // 'getContext('2d')' returns the drawing context for a 2D rendering of the canvas.
+        var ctx = document.getElementById('dayWiseChart').getContext('2d');
+
+        // Initialize a new Chart instance using Chart.js.
+        // This creates a new chart on the canvas using the context 'ctx'.
+        var dayWiseChart = new Chart(ctx, {
+
+            // 'type' defines the type of chart to render. Here it's a 'bar' chart.
+            type: 'bar',
+
+            // 'data' is an object that includes:
+            // - 'labels': an array of labels for the X-axis. In this case, these are dates.
+            // - 'datasets': an array of dataset objects, where each dataset represents a data series.
+            data: {
+                labels: chartData.labels, // Use the labels (e.g., dates) from the JSON data.
+                datasets: chartData.datasets // Use the datasets array from the JSON data.
+            },
+
+            // 'options' configures the chart's appearance and behavior.
+            options: {
+                // Makes the chart responsive to resizing of the window or container.
+                responsive: true,
+
+                // interaction settings control how the chart responds to user actions like hovering.
+                interaction: {
+                    mode: 'index',  // When hovering, the tooltip shows data for all datasets at the hovered index.
+                    intersect: false // The tooltip will display even if the pointer does not intersect any element.
+                },
+
+                // Plugin options (e.g., tooltips) can be customized here.
+                plugins: {
+                    tooltip: {
+                        mode: 'index',  // Same as interaction mode; groups all tooltips for the same index.
+                        intersect: false
+                    }
+                },
+
+                // Define the axes for the chart.
+                scales: {
+                    // The X-axis: display the labels, and stack bar segments (if there are multiple series).
+                    x: {
+                        stacked: true // This stacks the bars on top of each other for each label.
+                    },
+
+                    // Define the left Y-axis ('yCounts') for the order count values.
+                    yCounts: {
+                        type: 'linear', // A linear scale for numerical data.
+                        position: 'left', // Position this axis on the left side.
+                        stacked: true, // Stack the values if there are multiple bar datasets.
+                        beginAtZero: true, // The scale starts at zero.
+                        title: {
+                            display: true,
+                            text: 'Order Count' // Label for the Y-axis.
+                        }
+                    },
+
+                    // Define the right Y-axis ('ySales') for the sales amount values.
+                    ySales: {
+                        type: 'linear', // A linear scale for numerical data.
+                        position: 'right', // Position this axis on the right side.
+                        beginAtZero: true, // The scale starts at zero.
+                        stacked: false, // Do not stack the line chart data on top of the bars.
+                        grid: {
+                            drawOnChartArea: false // Avoid drawing grid lines for this axis to reduce visual clutter.
+                        },
+                        title: {
+                            display: true,
+                            text: 'Sales ($)' // Label for the Y-axis.
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to load order products via AJAX when a "View Products" button is clicked.
+        function loadOrderProducts(orderId) {
+            // Construct the URL for the AJAX request.
+            var url = '@Url.Action("GetOrderProducts", "Sales")' + '?orderId=' + orderId;
+            // Use the Fetch API to get the HTML content for the products modal.
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Insert the returned HTML into the modal body.
+                    document.getElementById('productsModalBody').innerHTML = html;
+                });
+        }
+    </script>
+}

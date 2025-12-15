@@ -1,0 +1,138 @@
+﻿@model BelajarEntityFramework.Models.SalesReportViewModel
+@{
+    Layout = null; // No layout is used for the PDF output
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sales Report PDF</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Additional print styles to control page breaks and avoid blank spaces -->
+    <style>
+        /* Prevent table rows from breaking across pages */
+        tr {
+            page-break-inside: avoid;
+        }
+
+        /* Keep table headers together on each page */
+        thead {
+            display: table-header-group;
+        }
+
+        /* Optional: Remove any forced margins/padding that may cause blank space */
+        .no-page-break {
+            page-break-inside: avoid;
+        }
+
+        /* Remove top border from repeated thead on subsequent pages */
+        thead tr, thead th {
+            border-top: none !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container my-4 bg-white p-4 shadow-sm">
+        <!-- Header Section -->
+        <div class="text-center border-bottom pb-3 mb-4">
+            <h1 class="text-primary">Sales Report</h1>
+            <p class="text-muted">Confidential Report – Internal Use Only</p>
+        </div>
+
+        <!-- Company Details Section -->
+        <div class="text-center mb-4">
+            <h4 class="font-weight-bold">ABC Corporation</h4>
+            <p>
+                123 Main Street, Suite 456, Anytown, Anycountry 12345<br />
+                Phone: (123) 456-7890 | Email: info@abccorp.com
+            </p>
+        </div>
+
+        <!-- Report Conditions Section -->
+        <div class="border rounded p-3 mb-4 bg-light">
+            <h5 class="font-weight-bold">Report Generated Based On:</h5>
+            <p>
+                <strong>Date Range:</strong>
+                @if (Model.Filter.DateRangeOption == "All")
+                {
+                    @:All Data
+                }
+                else
+                {
+                    @($"{Model.Filter.StartDate?.ToString("yyyy-MM-dd")} to {Model.Filter.EndDate?.ToString("yyyy-MM-dd")}")
+                }
+                <br />
+                @if (!string.IsNullOrEmpty(Model.Filter.Category))
+                {
+                    <span><strong>Category:</strong> @Model.Filter.Category<br /></span>
+                }
+                @if (!string.IsNullOrEmpty(Model.Filter.OrderStatus))
+                {
+                    <span><strong>Order Status:</strong> @Model.Filter.OrderStatus</span>
+                }
+            </p>
+        </div>
+
+        <!-- Summary Table Section -->
+        <div class="mb-4">
+            <table class="table table-bordered">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th>Total Orders</th>
+                        <th>Total Pending</th>
+                        <th>Total Completed</th>
+                        <th>Total Cancelled</th>
+                        <th>Total Sales Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr>
+                        <td>@Model.TotalOrders</td>
+                        <td>@Model.TotalPending</td>
+                        <td>@Model.TotalCompleted</td>
+                        <td>@Model.TotalCanceled</td>
+                        <td>$@Model.TotalSales</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-center mt-3">
+                This summary provides a comprehensive overview of our sales performance based on the selected criteria.
+            </p>
+        </div>
+
+        <!-- Order Details Section -->
+        <div class="mb-4">
+            <h5 class="font-weight-bold">Order Details</h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td>@order.OrderNumber</td>
+                                <td>@order.OrderDate.ToShortDateString()</td>
+                                <td>@order.OrderStatus</td>
+                                <td>$@order.TotalAmount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="text-center border-top pt-2">
+            <small>Report generated on @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</small>
+        </div>
+    </div>
+</body>
+</html>

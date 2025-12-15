@@ -5,6 +5,7 @@ using BelajarEntityFramework.Services;
 using BelajarEntityFramework.UOW;
 using CRUDinCoreMVC.UOW;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 
 namespace BelajarEntityFramework
 {
@@ -29,6 +30,8 @@ namespace BelajarEntityFramework
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
+            var wkhtmlPath = builder.Configuration["Rotativa:WkhtmltopdfPath"];
+            RotativaConfiguration.Setup(app.Environment.WebRootPath, wkhtmlPath);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
