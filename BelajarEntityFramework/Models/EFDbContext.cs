@@ -404,7 +404,141 @@ namespace BelajarEntityFramework.Models
                 new OrderItemChart { OrderItemId = 20, OrderId = 17, ProductId = 2, Quantity = 1, UnitPrice = 800m },
                 new OrderItemChart { OrderItemId = 21, OrderId = 18, ProductId = 3, Quantity = 1, UnitPrice = 150m }
             );
+
+            // Configure Employee->Country relationship to restrict delete
+            modelBuilder.Entity<EmployeeCascading>()
+                .HasOne(e => e.Country)
+                .WithMany() // or .WithMany(c => c.Employees) if you have that navigation property
+                .HasForeignKey(e => e.CountryId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+            // Configure Employee->State relationship to restrict delete
+            modelBuilder.Entity<EmployeeCascading>()
+                .HasOne(e => e.State)
+                .WithMany()
+                .HasForeignKey(e => e.StateId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // Configure Employee->City relationship to restrict delete
+            modelBuilder.Entity<EmployeeCascading>()
+                .HasOne(e => e.City)
+                .WithMany()
+                .HasForeignKey(e => e.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Country>().HasData(
+        new Country { CountryId = 1, CountryName = "India" },
+        new Country { CountryId = 2, CountryName = "USA" },
+        new Country { CountryId = 3, CountryName = "UK" },
+        new Country { CountryId = 4, CountryName = "Indonesia" },
+        new Country { CountryId = 5, CountryName = "Australia" },
+        new Country { CountryId = 6, CountryName = "Canada" },
+        new Country { CountryId = 7, CountryName = "Japan" },
+        new Country { CountryId = 8, CountryName = "Germany" }
+    );
+
+            // =======================
+            // STATES
+            // =======================
+            modelBuilder.Entity<State>().HasData(
+                // India
+                new State { StateId = 1, StateName = "Maharashtra", CountryId = 1 },
+                new State { StateId = 2, StateName = "Gujarat", CountryId = 1 },
+                new State { StateId = 3, StateName = "Delhi", CountryId = 1 },
+                new State { StateId = 4, StateName = "Karnataka", CountryId = 1 },
+
+                // USA
+                new State { StateId = 5, StateName = "California", CountryId = 2 },
+                new State { StateId = 6, StateName = "Texas", CountryId = 2 },
+                new State { StateId = 7, StateName = "New York", CountryId = 2 },
+
+                // UK
+                new State { StateId = 8, StateName = "England", CountryId = 3 },
+                new State { StateId = 9, StateName = "Scotland", CountryId = 3 },
+
+                // Indonesia
+                new State { StateId = 10, StateName = "DKI Jakarta", CountryId = 4 },
+                new State { StateId = 11, StateName = "Jawa Barat", CountryId = 4 },
+                new State { StateId = 12, StateName = "Jawa Tengah", CountryId = 4 },
+                new State { StateId = 13, StateName = "Jawa Timur", CountryId = 4 },
+                new State { StateId = 14, StateName = "Bali", CountryId = 4 },
+
+                // Australia
+                new State { StateId = 15, StateName = "New South Wales", CountryId = 5 },
+                new State { StateId = 16, StateName = "Victoria", CountryId = 5 },
+
+                // Canada
+                new State { StateId = 17, StateName = "Ontario", CountryId = 6 },
+                new State { StateId = 18, StateName = "British Columbia", CountryId = 6 },
+
+                // Japan
+                new State { StateId = 19, StateName = "Tokyo", CountryId = 7 },
+                new State { StateId = 20, StateName = "Osaka", CountryId = 7 },
+
+                // Germany
+                new State { StateId = 21, StateName = "Bavaria", CountryId = 8 },
+                new State { StateId = 22, StateName = "Berlin", CountryId = 8 }
+            );
+
+            // =======================
+            // CITIES
+            // =======================
+            modelBuilder.Entity<City>().HasData(
+                // India
+                new City { CityId = 1, CityName = "Mumbai", StateId = 1 },
+                new City { CityId = 2, CityName = "Pune", StateId = 1 },
+                new City { CityId = 3, CityName = "Ahmedabad", StateId = 2 },
+                new City { CityId = 4, CityName = "Surat", StateId = 2 },
+                new City { CityId = 5, CityName = "New Delhi", StateId = 3 },
+                new City { CityId = 6, CityName = "Bangalore", StateId = 4 },
+                new City { CityId = 7, CityName = "Mysore", StateId = 4 },
+
+                // USA
+                new City { CityId = 8, CityName = "Los Angeles", StateId = 5 },
+                new City { CityId = 9, CityName = "San Francisco", StateId = 5 },
+                new City { CityId = 10, CityName = "Houston", StateId = 6 },
+                new City { CityId = 11, CityName = "Dallas", StateId = 6 },
+                new City { CityId = 12, CityName = "New York City", StateId = 7 },
+                new City { CityId = 13, CityName = "Buffalo", StateId = 7 },
+
+                // UK
+                new City { CityId = 14, CityName = "London", StateId = 8 },
+                new City { CityId = 15, CityName = "Manchester", StateId = 8 },
+                new City { CityId = 16, CityName = "Edinburgh", StateId = 9 },
+                new City { CityId = 17, CityName = "Glasgow", StateId = 9 },
+
+                // Indonesia
+                new City { CityId = 18, CityName = "Jakarta", StateId = 10 },
+                new City { CityId = 19, CityName = "Bandung", StateId = 11 },
+                new City { CityId = 20, CityName = "Bekasi", StateId = 11 },
+                new City { CityId = 21, CityName = "Semarang", StateId = 12 },
+                new City { CityId = 22, CityName = "Surabaya", StateId = 13 },
+                new City { CityId = 23, CityName = "Malang", StateId = 13 },
+                new City { CityId = 24, CityName = "Denpasar", StateId = 14 },
+
+                // Australia
+                new City { CityId = 25, CityName = "Sydney", StateId = 15 },
+                new City { CityId = 26, CityName = "Newcastle", StateId = 15 },
+                new City { CityId = 27, CityName = "Melbourne", StateId = 16 },
+
+                // Canada
+                new City { CityId = 28, CityName = "Toronto", StateId = 17 },
+                new City { CityId = 29, CityName = "Ottawa", StateId = 17 },
+                new City { CityId = 30, CityName = "Vancouver", StateId = 18 },
+
+                // Japan
+                new City { CityId = 31, CityName = "Tokyo", StateId = 19 },
+                new City { CityId = 32, CityName = "Shinjuku", StateId = 19 },
+                new City { CityId = 33, CityName = "Osaka City", StateId = 20 },
+
+                // Germany
+                new City { CityId = 34, CityName = "Munich", StateId = 21 },
+                new City { CityId = 35, CityName = "Nuremberg", StateId = 21 },
+                new City { CityId = 36, CityName = "Berlin", StateId = 22 }
+            );
         }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<State> States { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<EmployeeCascading> EmployeesCascading { get; set; }
         public DbSet<CustomerChart> CustomersChart { get; set; }
         public DbSet<OrderChart> OrdersChart { get; set; }
         public DbSet<OrderItemChart> OrderItemsChart { get; set; }

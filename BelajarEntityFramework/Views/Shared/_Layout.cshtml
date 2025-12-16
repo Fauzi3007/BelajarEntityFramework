@@ -15,52 +15,106 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BelajarEntityFramework</a>
-                <!-- Navbar Toggler for Bootstrap 5 -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    BelajarEntityFramework
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- Collapsible Navbar Section -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                        <!-- Employees -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Employees</a>
+                            <a class="nav-link" asp-controller="Employees" asp-action="Index">Employees</a>
                         </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Departments -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Departments" asp-action="Index">Departments</a>
+                            <a class="nav-link" asp-controller="Departments" asp-action="Index">Departments</a>
                         </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Dropdown : Data Management -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                File Handling
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Products" asp-action="Index">
+                                        Product File Handling
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="UserProfile" asp-action="Index">
+                                        UserProfile List
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="UserProfile" asp-action="Create">
+                                        UserProfile Create
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Dropdown : Import / Export -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Import / Export
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="EmployeeExcel" asp-action="Index">Excel Export</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="ProductExcel" asp-action="Index">Excel Import</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Orders" asp-action="Index">PDF</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Visualization -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Product File Handling</a>
+                            <a class="nav-link" asp-controller="Sales" asp-action="Index">Chart</a>
                         </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Cascading -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="Index">UserProfile List</a>
+                            <a class="nav-link text-warning fw-semibold"
+                               asp-controller="EmployeeCascading" asp-action="Create">
+                                Dropdown Cascading
+                            </a>
                         </li>
+
+                        <li class="nav-divider d-none d-lg-block"></li>
+
+                        <!-- Privacy -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="Create">UserProfile Create</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeExcel" asp-action="Index">Excel Export</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProductExcel" asp-action="Index">Excel Import</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">PDF</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Sales" asp-action="Index">Chart</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
 
     <div class="container">

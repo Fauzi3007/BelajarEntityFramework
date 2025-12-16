@@ -4,6 +4,7 @@ using BelajarEntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BelajarEntityFramework.Migrations
 {
     [DbContext(typeof(EFDbContext))]
-    partial class EFDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216025014_CascadeMig")]
+    partial class CascadeMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,120 +355,6 @@ namespace BelajarEntityFramework.Migrations
                             CityId = 17,
                             CityName = "Glasgow",
                             StateId = 9
-                        },
-                        new
-                        {
-                            CityId = 18,
-                            CityName = "Jakarta",
-                            StateId = 10
-                        },
-                        new
-                        {
-                            CityId = 19,
-                            CityName = "Bandung",
-                            StateId = 11
-                        },
-                        new
-                        {
-                            CityId = 20,
-                            CityName = "Bekasi",
-                            StateId = 11
-                        },
-                        new
-                        {
-                            CityId = 21,
-                            CityName = "Semarang",
-                            StateId = 12
-                        },
-                        new
-                        {
-                            CityId = 22,
-                            CityName = "Surabaya",
-                            StateId = 13
-                        },
-                        new
-                        {
-                            CityId = 23,
-                            CityName = "Malang",
-                            StateId = 13
-                        },
-                        new
-                        {
-                            CityId = 24,
-                            CityName = "Denpasar",
-                            StateId = 14
-                        },
-                        new
-                        {
-                            CityId = 25,
-                            CityName = "Sydney",
-                            StateId = 15
-                        },
-                        new
-                        {
-                            CityId = 26,
-                            CityName = "Newcastle",
-                            StateId = 15
-                        },
-                        new
-                        {
-                            CityId = 27,
-                            CityName = "Melbourne",
-                            StateId = 16
-                        },
-                        new
-                        {
-                            CityId = 28,
-                            CityName = "Toronto",
-                            StateId = 17
-                        },
-                        new
-                        {
-                            CityId = 29,
-                            CityName = "Ottawa",
-                            StateId = 17
-                        },
-                        new
-                        {
-                            CityId = 30,
-                            CityName = "Vancouver",
-                            StateId = 18
-                        },
-                        new
-                        {
-                            CityId = 31,
-                            CityName = "Tokyo",
-                            StateId = 19
-                        },
-                        new
-                        {
-                            CityId = 32,
-                            CityName = "Shinjuku",
-                            StateId = 19
-                        },
-                        new
-                        {
-                            CityId = 33,
-                            CityName = "Osaka City",
-                            StateId = 20
-                        },
-                        new
-                        {
-                            CityId = 34,
-                            CityName = "Munich",
-                            StateId = 21
-                        },
-                        new
-                        {
-                            CityId = 35,
-                            CityName = "Nuremberg",
-                            StateId = 21
-                        },
-                        new
-                        {
-                            CityId = 36,
-                            CityName = "Berlin",
-                            StateId = 22
                         });
                 });
 
@@ -500,31 +389,6 @@ namespace BelajarEntityFramework.Migrations
                         {
                             CountryId = 3,
                             CountryName = "UK"
-                        },
-                        new
-                        {
-                            CountryId = 4,
-                            CountryName = "Indonesia"
-                        },
-                        new
-                        {
-                            CountryId = 5,
-                            CountryName = "Australia"
-                        },
-                        new
-                        {
-                            CountryId = 6,
-                            CountryName = "Canada"
-                        },
-                        new
-                        {
-                            CountryId = 7,
-                            CountryName = "Japan"
-                        },
-                        new
-                        {
-                            CountryId = 8,
-                            CountryName = "Germany"
                         });
                 });
 
@@ -2085,84 +1949,6 @@ namespace BelajarEntityFramework.Migrations
                             StateId = 9,
                             CountryId = 3,
                             StateName = "Scotland"
-                        },
-                        new
-                        {
-                            StateId = 10,
-                            CountryId = 4,
-                            StateName = "DKI Jakarta"
-                        },
-                        new
-                        {
-                            StateId = 11,
-                            CountryId = 4,
-                            StateName = "Jawa Barat"
-                        },
-                        new
-                        {
-                            StateId = 12,
-                            CountryId = 4,
-                            StateName = "Jawa Tengah"
-                        },
-                        new
-                        {
-                            StateId = 13,
-                            CountryId = 4,
-                            StateName = "Jawa Timur"
-                        },
-                        new
-                        {
-                            StateId = 14,
-                            CountryId = 4,
-                            StateName = "Bali"
-                        },
-                        new
-                        {
-                            StateId = 15,
-                            CountryId = 5,
-                            StateName = "New South Wales"
-                        },
-                        new
-                        {
-                            StateId = 16,
-                            CountryId = 5,
-                            StateName = "Victoria"
-                        },
-                        new
-                        {
-                            StateId = 17,
-                            CountryId = 6,
-                            StateName = "Ontario"
-                        },
-                        new
-                        {
-                            StateId = 18,
-                            CountryId = 6,
-                            StateName = "British Columbia"
-                        },
-                        new
-                        {
-                            StateId = 19,
-                            CountryId = 7,
-                            StateName = "Tokyo"
-                        },
-                        new
-                        {
-                            StateId = 20,
-                            CountryId = 7,
-                            StateName = "Osaka"
-                        },
-                        new
-                        {
-                            StateId = 21,
-                            CountryId = 8,
-                            StateName = "Bavaria"
-                        },
-                        new
-                        {
-                            StateId = 22,
-                            CountryId = 8,
-                            StateName = "Berlin"
                         });
                 });
 
